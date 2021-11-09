@@ -16,3 +16,7 @@ This README file is being updated periodically to include the current balance an
 
 #### Current net worth
 `ledger -f $LEDGER_FILE_PATH balance ^assets ^liabilities`
+
+```
+\n\n Blablabla \n
+```
