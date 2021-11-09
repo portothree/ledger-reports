@@ -9,7 +9,7 @@ This README file is being updated periodically to include the current balance an
 
 #### Current balance (including virtual/budget entries)
 
-`ledger -f $LEDGER_FILE_PATH balance`
+`$ ledger -f $LEDGER_FILE_PATH balance`
 
 ```
 
@@ -17,7 +17,7 @@ This README file is being updated periodically to include the current balance an
 
 #### Current real balance
 
-`ledger -R -f $LEDGER_FILE_PATH balance`
+`$ ledger -R -f $LEDGER_FILE_PATH balance`
 
 ```
 
@@ -25,7 +25,7 @@ This README file is being updated periodically to include the current balance an
 
 #### Current net worth
 
-`ledger -f $LEDGER_FILE_PATH balance ^assets ^liabilities`
+`$ ledger -f $LEDGER_FILE_PATH balance ^assets ^liabilities`
 
 ```
 
