@@ -17,7 +17,7 @@ This README file is being updated periodically to include the current balance an
 
 #### Current real balance
 
-    `ledger -R -f $LEDGER_FILE_PATH balance`
+`ledger -R -f $LEDGER_FILE_PATH balance`
 
 ```
 
