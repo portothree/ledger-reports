@@ -7,7 +7,7 @@ This README file is being updated periodically to include the current balance an
 `fin:` for finance related updates (outflow/inflow entries)
 `docs:` README updates
 
-#### Current balance
+#### Current balance (including virtual/budget entries)
 
 `ledger -f $LEDGER_FILE_PATH balance`
 
@@ -15,9 +15,8 @@ This README file is being updated periodically to include the current balance an
 
 ```
 
-#### Current real\* balance
+#### Current real balance
 
--   Balance without virtual transactions
     `ledger -R -f $LEDGER_FILE_PATH balance`
 
 ```
