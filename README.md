@@ -4,8 +4,8 @@ This README file is being updated periodically to include the current balance an
 
 #### Git messages standard
 
-`fin:` for finance related updates (outflow/inflow entries)
-`docs:` README updates
+-   `fin:` for finance related updates (outflow/inflow entries)
+-   `docs:` README updates
 
 #### Current balance (including virtual/budget entries)
 
