@@ -16,7 +16,7 @@ Here's what a single transactions might look like:
 	Expenses:Transportation		EUR 3.96
 	[Budget:Transportation]		EUR -3.96
 	Assets:N26		EUR -3.96
-	[Budget]
+	[Budget]		EUR -3.96
 ```
 
 Each line explained:
