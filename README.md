@@ -96,3 +96,9 @@ Each line explained:
 --------------------
                    0
 ```
+#### Current month budget
+
+`$ ledger -f drewr3.dat -b 2021-11-01 -e 2021-11-02 reg ^Budget$ --invert --subtotal`
+
+```
+```
