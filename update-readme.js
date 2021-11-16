@@ -51,6 +51,11 @@ const commands = [
 		command: "ledger -R -f $LEDGER_FILE_PATH balance",
 		output: "",
 	},
+	{
+		description: "Current month budget",
+		command: "ledger -f $LEDGER_FILE_PATH -b 2021-11-01 -e 2021-11-02 reg ^Budget$ --invert --subtotal",
+		output: "",
+	},
 ];
 
 async function evaluateCommand(description, command) {
