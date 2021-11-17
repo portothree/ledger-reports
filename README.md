@@ -31,7 +31,7 @@ Each line explained:
 
 #### Current net worth
 
-`$ ledger -f drewr3.dat balance ^assets ^liabilities`
+`$ ledger -f ./drewr3.dat balance ^assets ^liabilities`
 
 ```
          $ -3,804.00  Assets
@@ -45,9 +45,10 @@ Each line explained:
 --------------------
          $ -3,867.60
 ```
+
 #### Current balance (including virtual/budget entries
 
-`$ ledger -f drewr3.dat balance`
+`$ ledger -f ./drewr3.dat balance`
 
 ```
          $ -3,804.00  Assets
@@ -71,9 +72,10 @@ Each line explained:
 --------------------
            $ -243.60
 ```
+
 #### Current real balance
 
-`$ ledger -R -f drewr3.dat balance`
+`$ ledger -R -f ./drewr3.dat balance`
 
 ```
          $ -3,804.00  Assets
@@ -96,9 +98,11 @@ Each line explained:
 --------------------
                    0
 ```
+
 #### Current month budget
 
-`$ ledger -f drewr3.dat -b 2021-11-01 -e 2021-11-02 reg ^Budget$ --invert --subtotal`
+`$ ledger -f ./drewr3.dat -b 2021-11-01 -e 2021-11-02 reg ^Budget$ --invert --subtotal`
 
 ```
 ```
+
