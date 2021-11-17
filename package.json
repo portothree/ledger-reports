@@ -3,9 +3,6 @@
 	"version": "1.0.0",
 	"description": "Live Markdown/Readme file with useful ledger outputs",
 	"main": "update-readme.js",
-	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1"
-	},
 	"files": ["update-readme.js"],
 	"repository": {
 		"type": "git",
