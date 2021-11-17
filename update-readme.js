@@ -2,6 +2,7 @@ const readline = require('readline');
 const fs = require('fs');
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
+const dayjs = require('dayjs');
 
 const staticDocs = [
 	'# Ledger live README\n',
@@ -39,23 +40,27 @@ const staticDocs = [
 const commands = [
 	{
 		description: 'Current net worth',
-		command: 'ledger -f $LEDGER_FILE_PATH balance ^assets ^liabilities',
-		output: '',
-	},
-	{
-		description: 'Current balance (including virtual/budget entries',
-		command: 'ledger -f $LEDGER_FILE_PATH balance',
-		output: '',
-	},
-	{
-		description: 'Current real balance',
-		command: 'ledger -R -f $LEDGER_FILE_PATH balance',
-		output: '',
-	},
-	{
-		description: 'Current month budget',
 		command:
-			'ledger -f $LEDGER_FILE_PATH -b 2021-11-01 -e 2021-11-02 reg ^Budget$ --invert --subtotal',
+			'ledger -f $LEDGER_FILE_PATH balance ^Assets ^Equity ^Liabilities',
+		output: '',
+	},
+	{
+		description: 'Current balance',
+		command: 'ledger -R -f $LEDGER_FILE_PATH balance ^Assets',
+		output: '',
+	},
+	{
+		description: 'Current budget balance',
+		command: 'ledger -f $LEDGER_FILE_PATH balance ^Budget',
+		output: '',
+	},
+	{
+		description: 'Current month expenses',
+		command: `ledger -f $LEDGER_FILE_PATH balance -b ${dayjs()
+			.startOf('month')
+			.format('YYYY-MM-DD')} -e ${dayjs()
+			.endOf('month')
+			.format('YYYY-MM-DD')} ^Expenses`,
 		output: '',
 	},
 ];
