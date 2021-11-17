@@ -3,7 +3,9 @@
 	"version": "1.0.0",
 	"description": "Live Markdown/Readme file with useful ledger outputs",
 	"main": "update-readme.js",
-	"files": ["update-readme.js"],
+	"files": [
+		"update-readme.js"
+	],
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/portothree/ledger-live-readme.git"
