@@ -47,6 +47,13 @@ This README file is being updated periodically to include the current balance an
 ```
 ```
 
+#### Income over time
+
+`$ ledger -f ./drewr3.dat balance ^Income --invert --balance-format "%T"`
+
+```
+$ 2,030.00$ 2,000.00$ 30.00$ 2,030.00```
+
 ### FAQ
 
 How a single transactions should look like?

@@ -34,20 +34,23 @@ const faqMarkdown = [
 	'** Transactions with `[]` or `()` are [virtual postings](https://www.ledger-cli.org/3.0/doc/ledger3.html#Virtual-postings)\n\n',
 ].join('');
 
-const balanceCommands = [
+const commands = [
 	{
 		description: 'Current net worth',
+		type: 'balance',
 		command:
 			'ledger -f $LEDGER_FILE_PATH balance ^Assets ^Equity ^Liabilities',
 		output: '',
 	},
 	{
 		description: 'Current balance',
+		type: 'balance',
 		command: 'ledger -R -f $LEDGER_FILE_PATH balance ^Assets',
 		output: '',
 	},
 	{
 		description: 'Current month expenses',
+		type: 'balance',
 		command: `ledger -f $LEDGER_FILE_PATH balance -b ${dayjs()
 			.startOf('month')
 			.format('YYYY-MM-DD')} -e ${dayjs()
@@ -55,12 +58,17 @@ const balanceCommands = [
 			.format('YYYY-MM-DD')} ^Expenses`,
 		output: '',
 	},
-];
-
-const budgetCommands = [
 	{
 		description: 'Current budget balance',
+		type: 'budget',
 		command: 'ledger -f $LEDGER_FILE_PATH balance ^Budget',
+		output: '',
+	},
+	{
+		description: 'Income over time',
+		type: 'graph',
+		command:
+			'ledger -f $LEDGER_FILE_PATH balance ^Income --invert --balance-format "%T"',
 		output: '',
 	},
 ];
@@ -90,9 +98,10 @@ async function main(
 		title: 'Live ledger README',
 		inputPath: './drewr3.dat',
 		outputPath: './README.md',
+		balance: true,
 		budget: true,
+		graph: true,
 		strict: false,
-		graphs: true,
 	}
 ) {
 	if (!props.inputPath) {
@@ -112,14 +121,18 @@ async function main(
 		[`# ${props.title}\n`, headMarkdown].join('')
 	);
 
-	const commands = props.budget
-		? [...balanceCommands, ...budgetCommands]
-		: balanceCommands;
+	const allowedCommands = commands.reduce((acc, curr) => {
+		if (props[curr.type]) {
+			acc.push(curr);
+		}
+
+		return acc;
+	}, []);
 
 	const options = props.strict ? '--strict' : '';
 
 	// Write each evaluated command output
-	for (const { description, command } of commands) {
+	for (const { description, command } of allowedCommands) {
 		const evaluatedCommand = await evaluateCommand(
 			description,
 			command.replace('$LEDGER_FILE_PATH', props.inputPath),
