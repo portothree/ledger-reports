@@ -80,7 +80,7 @@ const commands = [
 ];
 
 async function evaluateCommand(
-	type = 'balance',
+	type = CMD_TYPES.BALANCE,
 	description,
 	command,
 	options = ''
@@ -91,6 +91,9 @@ async function evaluateCommand(
 		throw new Error(stderr);
 	}
 
+	const graphOutput =
+		type === CMD_TYPES.GRAPH ? stdout.replace(/[^0-9.-]+/g, ' ') : null;
+
 	return [
 		'#### ',
 		description,
@@ -99,7 +102,7 @@ async function evaluateCommand(
 		command,
 		'`\n\n',
 		'```\n',
-		stdout,
+		graphOutput ?? stdout,
 		'```\n\n',
 	].join('');
 }

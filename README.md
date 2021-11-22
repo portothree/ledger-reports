@@ -52,7 +52,7 @@ This README file is being updated periodically to include the current balance an
 `$ ledger -f ./drewr3.dat balance ^Income --invert --balance-format "%T"`
 
 ```
-$ 2,030.00$ 2,000.00$ 30.00$ 2,030.00```
+2030.002000.0030.002030.00```
 
 ### FAQ
 
