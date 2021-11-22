@@ -112,11 +112,12 @@ async function main(
 		[`# ${props.title}\n`, headMarkdown].join('')
 	);
 
+	const commands = props.budget
+		? [...balanceCommands, ...budgetCommands]
+		: balanceCommands;
+
 	// Write each evaluated command output
-	for (const { description, command } of [
-		...balanceCommands,
-		...budgetCommands,
-	]) {
+	for (const { description, command } of commands) {
 		const evaluatedCommand = await evaluateCommand(
 			description,
 			command.replace('$LEDGER_FILE_PATH', props.inputPath)
