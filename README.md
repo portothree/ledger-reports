@@ -1,11 +1,6 @@
-# Ledger live README
-
+# Live ledger README
+,
 This README file is being updated periodically to include the current balance and other ledger outputs.
-
-### Git messages standard
-
--   `fin:` for finance related updates (outflow/inflow entries)
--   `docs:` README updates
 
 ### Transactions
 
@@ -60,16 +55,16 @@ Each line explained:
          $ -3,804.00
 ```
 
+#### Current month expenses
+
+`$ ledger -f ./drewr3.dat balance -b 2021-11-01 -e 2021-11-30 ^Expenses`
+
+```
+```
+
 #### Current budget balance
 
 `$ ledger -f ./drewr3.dat balance ^Budget`
-
-```
-```
-
-#### Current month expenses
-
-`$ ledger -f ./drewr3.dat -b 2021-11-01 -e 2021-11-30 balance ^Expenses`
 
 ```
 ```

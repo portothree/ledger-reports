@@ -5,14 +5,8 @@ const exec = util.promisify(require('child_process').exec);
 const dayjs = require('dayjs');
 
 const staticDocs = [
-	'# Ledger live README\n',
 	'\n',
 	'This README file is being updated periodically to include the current balance and other ledger outputs.\n',
-	'\n',
-	'### Git messages standard\n',
-	'\n',
-	'-   `fin:` for finance related updates (outflow/inflow entries)\n',
-	'-   `docs:` README updates\n',
 	'\n',
 	'### Transactions\n',
 	'\n',
@@ -37,7 +31,7 @@ const staticDocs = [
 	'** Transactions with `[]` or `()` are [virtual postings](https://www.ledger-cli.org/3.0/doc/ledger3.html#Virtual-postings)\n\n',
 ].join('');
 
-const commands = [
+const balanceCommands = [
 	{
 		description: 'Current net worth',
 		command:
@@ -50,17 +44,20 @@ const commands = [
 		output: '',
 	},
 	{
-		description: 'Current budget balance',
-		command: 'ledger -f $LEDGER_FILE_PATH balance ^Budget',
-		output: '',
-	},
-	{
 		description: 'Current month expenses',
 		command: `ledger -f $LEDGER_FILE_PATH balance -b ${dayjs()
 			.startOf('month')
 			.format('YYYY-MM-DD')} -e ${dayjs()
 			.endOf('month')
 			.format('YYYY-MM-DD')} ^Expenses`,
+		output: '',
+	},
+];
+
+const budgetCommands = [
+	{
+		description: 'Current budget balance',
+		command: 'ledger -f $LEDGER_FILE_PATH balance ^Budget',
 		output: '',
 	},
 ];
@@ -85,32 +82,44 @@ async function evaluateCommand(description, command) {
 	].join('');
 }
 
-async function main(props = { ledgerFilePath: '', outputMarkdownPath: '' }) {
-	if (!props.ledgerFilePath) {
+async function main(
+	props = {
+		title: 'Live ledger README',
+		inputPath: './drewr3.dat',
+		outputPath: './README.md',
+		budget: true,
+		restrict: true,
+		graphs: true,
+	}
+) {
+	if (!props.inputPath) {
 		throw new Error('Path to ledger file not provided');
 	}
 
-	if (!props.outputMarkdownPath) {
+	if (!props.outputPath) {
 		throw new Error('Path output Markdown not provided');
 	}
 
 	// Truncate README content
-	await fs.promises.truncate(props.outputMarkdownPath);
+	await fs.promises.truncate(props.outputPath);
 
 	// Write static docs to README
-	await fs.promises.appendFile(props.outputMarkdownPath, staticDocs);
+	await fs.promises.appendFile(
+		props.outputPath,
+		[`# ${props.title}\n`, staticDocs].join()
+	);
 
 	// Write each evaluated command output
-	for (const { description, command } of commands) {
+	for (const { description, command } of [
+		...balanceCommands,
+		...budgetCommands,
+	]) {
 		const evaluatedCommand = await evaluateCommand(
 			description,
-			command.replace('$LEDGER_FILE_PATH', props.ledgerFilePath)
+			command.replace('$LEDGER_FILE_PATH', props.inputPath)
 		);
 
-		await fs.promises.appendFile(
-			props.outputMarkdownPath,
-			evaluatedCommand
-		);
+		await fs.promises.appendFile(props.outputPath, evaluatedCommand);
 	}
 }
 
