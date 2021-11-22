@@ -4,6 +4,12 @@ const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 const dayjs = require('dayjs');
 
+const CMD_TYPES = {
+	BALANCE: 'balance',
+	BUDGET: 'budget',
+	GRAPH: 'graph',
+};
+
 const headMarkdown = [
 	'\n',
 	'This README file is being updated periodically to include the current balance and other ledger outputs.\n',
@@ -37,20 +43,20 @@ const faqMarkdown = [
 const commands = [
 	{
 		description: 'Current net worth',
-		type: 'balance',
+		type: CMD_TYPES.BUDGET,
 		command:
 			'ledger -f $LEDGER_FILE_PATH balance ^Assets ^Equity ^Liabilities',
 		output: '',
 	},
 	{
 		description: 'Current balance',
-		type: 'balance',
+		type: CMD_TYPES.BUDGET,
 		command: 'ledger -R -f $LEDGER_FILE_PATH balance ^Assets',
 		output: '',
 	},
 	{
 		description: 'Current month expenses',
-		type: 'balance',
+		type: CMD_TYPES.BUDGET,
 		command: `ledger -f $LEDGER_FILE_PATH balance -b ${dayjs()
 			.startOf('month')
 			.format('YYYY-MM-DD')} -e ${dayjs()
@@ -60,20 +66,25 @@ const commands = [
 	},
 	{
 		description: 'Current budget balance',
-		type: 'budget',
+		type: CMD_TYPES.BUDGET,
 		command: 'ledger -f $LEDGER_FILE_PATH balance ^Budget',
 		output: '',
 	},
 	{
 		description: 'Income over time',
-		type: 'graph',
+		type: CMD_TYPES.GRAPH,
 		command:
 			'ledger -f $LEDGER_FILE_PATH balance ^Income --invert --balance-format "%T"',
 		output: '',
 	},
 ];
 
-async function evaluateCommand(description, command, options = '') {
+async function evaluateCommand(
+	type = 'balance',
+	description,
+	command,
+	options = ''
+) {
 	const { stdout, stderr } = await exec(`${command} ${options}`);
 
 	if (stderr) {
@@ -132,8 +143,9 @@ async function main(
 	const options = props.strict ? '--strict' : '';
 
 	// Write each evaluated command output
-	for (const { description, command } of allowedCommands) {
+	for (const { description, type, command } of allowedCommands) {
 		const evaluatedCommand = await evaluateCommand(
+			type,
 			description,
 			command.replace('$LEDGER_FILE_PATH', props.inputPath),
 			options
