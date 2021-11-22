@@ -65,8 +65,8 @@ const budgetCommands = [
 	},
 ];
 
-async function evaluateCommand(description, command) {
-	const { stdout, stderr } = await exec(command);
+async function evaluateCommand(description, command, options = '') {
+	const { stdout, stderr } = await exec(`${command} ${options}`);
 
 	if (stderr) {
 		throw new Error(stderr);
@@ -91,7 +91,7 @@ async function main(
 		inputPath: './drewr3.dat',
 		outputPath: './README.md',
 		budget: true,
-		restrict: true,
+		strict: false,
 		graphs: true,
 	}
 ) {
@@ -116,11 +116,14 @@ async function main(
 		? [...balanceCommands, ...budgetCommands]
 		: balanceCommands;
 
+	const options = props.strict ? '--strict' : '';
+
 	// Write each evaluated command output
 	for (const { description, command } of commands) {
 		const evaluatedCommand = await evaluateCommand(
 			description,
-			command.replace('$LEDGER_FILE_PATH', props.inputPath)
+			command.replace('$LEDGER_FILE_PATH', props.inputPath),
+			options
 		);
 
 		await fs.promises.appendFile(props.outputPath, evaluatedCommand);
