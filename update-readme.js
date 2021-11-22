@@ -4,13 +4,16 @@ const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 const dayjs = require('dayjs');
 
-const staticDocs = [
+const headMarkdown = [
 	'\n',
 	'This README file is being updated periodically to include the current balance and other ledger outputs.\n',
 	'\n',
-	'### Transactions\n',
+].join('');
+
+const faqMarkdown = [
+	'### FAQ\n',
 	'\n',
-	"Here's what a single transactions might look like:\n",
+	'How a single transactions should look like?\n',
 	'\n',
 	'```\n',
 	'2021-11-10	*	Uber\n',
@@ -93,7 +96,7 @@ async function main(
 	}
 ) {
 	if (!props.inputPath) {
-		throw new Error('Path to ledger file not provided');
+		throw new Error('Path to Ledger file not provided');
 	}
 
 	if (!props.outputPath) {
@@ -103,10 +106,10 @@ async function main(
 	// Truncate README content
 	await fs.promises.truncate(props.outputPath);
 
-	// Write static docs to README
+	// Write head markdown to README
 	await fs.promises.appendFile(
 		props.outputPath,
-		[`# ${props.title}\n`, staticDocs].join()
+		[`# ${props.title}\n`, headMarkdown].join('')
 	);
 
 	// Write each evaluated command output
@@ -121,8 +124,11 @@ async function main(
 
 		await fs.promises.appendFile(props.outputPath, evaluatedCommand);
 	}
+
+	// Write FAQ markdown to README
+	await fs.promises.appendFile(props.outputPath, faqMarkdown);
 }
 
 module.exports = {
-	updateDoc: main,
+	exec: main,
 };
