@@ -1,7 +1,7 @@
 const readline = require('readline');
 const fs = require('fs');
 const util = require('util');
-const exec = util.promisify(require('child_process').exec);
+const childProcess = require('child_process');
 const dayjs = require('dayjs');
 
 const CMD_TYPES = {
@@ -85,15 +85,13 @@ async function evaluateCommand(
 	command,
 	options = ''
 ) {
+	const exec = util.promisify(childProcess.exec);
 	const { stdout, stderr } = await exec(`${command} ${options}`);
-
 	if (stderr) {
 		throw new Error(stderr);
 	}
-
 	const graphOutput =
 		type === CMD_TYPES.GRAPH ? stdout.replace(/[^0-9.-]+/g, ' ') : null;
-
 	return [
 		'#### ',
 		description,
@@ -163,4 +161,5 @@ async function main(
 
 module.exports = {
 	exec: main,
+	evaluateCommand,
 };
