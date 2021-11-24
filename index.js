@@ -68,7 +68,7 @@ const commands = [
 	{
 		description: 'Income over time',
 		type: CMD_TYPES.GRAPH,
-		exec: 'ledger -f $LEDGER_FILE_PATH balance ^Income --invert --balance-format "%T"',
+		exec: 'ledger -f $LEDGER_FILE_PATH balance ^Income --invert --balance-format "%(to_int(T)) "', // Mind the intentional space, could also be a tab \t
 	},
 ];
 
@@ -79,12 +79,27 @@ async function evaluateCommand(
 	options = ''
 ) {
 	const exec = util.promisify(childProcess.exec);
-	const { stdout, stderr } = await exec(`${command} ${options}`);
-	if (stderr) {
-		throw new Error(stderr);
-	}
-	const graphOutput =
-		type === CMD_TYPES.GRAPH ? stdout.replace(/[^0-9.-]+/g, ' ') : null;
+	const ledgetOutput = await exec(`${command} ${options}`).then(
+		({ stdout, stderr }) => {
+			if (stderr) {
+				throw new Error(stderr);
+			}
+
+			return stdout;
+		}
+	);
+	const commandOutput =
+		type === CMD_TYPES.GRAPH
+			? await exec(`bash ./bin/spark ${ledgetOutput}`).then(
+					({ stdout, stderr }) => {
+						if (stderr) {
+							throw new Error(stderr);
+						}
+
+						return [stdout, '\n', ledgetOutput].join('');
+					}
+			  )
+			: ledgetOutput;
 	return [
 		'#### ',
 		description,
@@ -93,7 +108,7 @@ async function evaluateCommand(
 		command,
 		'`\n\n',
 		'```\n',
-		graphOutput ?? stdout,
+		commandOutput,
 		'```\n\n',
 	].join('');
 }
