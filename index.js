@@ -71,7 +71,7 @@ const commands = [
 		exec: 'ledger -f $LEDGER_FILE_PATH balance ^Income --invert --flat --no-total --balance-format "%(to_int(T)) "', // Mind the intentional space, could also be a tab \t
 	},
 	{
-		description: 'Income over time',
+		description: 'Expenses over time',
 		type: CMD_TYPES.GRAPH,
 		exec: 'ledger -f $LEDGER_FILE_PATH balance ^Expenses --flat --no-total --balance-format "%(to_int(T)) "',
 	},
@@ -101,7 +101,7 @@ async function evaluateCommand(
 							throw new Error(stderr);
 						}
 
-						return [stdout, '\n', ledgetOutput].join('');
+						return [stdout, '\n', ledgetOutput, '\n'].join('');
 					}
 			  )
 			: ledgetOutput;
