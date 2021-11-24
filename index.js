@@ -44,38 +44,31 @@ const commands = [
 	{
 		description: 'Current net worth',
 		type: CMD_TYPES.BUDGET,
-		command:
-			'ledger -f $LEDGER_FILE_PATH balance ^Assets ^Equity ^Liabilities',
-		output: '',
+		exec: 'ledger -f $LEDGER_FILE_PATH balance ^Assets ^Equity ^Liabilities',
 	},
 	{
 		description: 'Current balance',
 		type: CMD_TYPES.BUDGET,
-		command: 'ledger -R -f $LEDGER_FILE_PATH balance ^Assets',
-		output: '',
+		exec: 'ledger -R -f $LEDGER_FILE_PATH balance ^Assets',
 	},
 	{
 		description: 'Current month expenses',
 		type: CMD_TYPES.BUDGET,
-		command: `ledger -f $LEDGER_FILE_PATH balance -b ${dayjs()
+		exec: `ledger -f $LEDGER_FILE_PATH balance -b ${dayjs()
 			.startOf('month')
 			.format('YYYY-MM-DD')} -e ${dayjs()
 			.endOf('month')
 			.format('YYYY-MM-DD')} ^Expenses`,
-		output: '',
 	},
 	{
 		description: 'Current budget balance',
 		type: CMD_TYPES.BUDGET,
-		command: 'ledger -f $LEDGER_FILE_PATH balance ^Budget',
-		output: '',
+		exec: 'ledger -f $LEDGER_FILE_PATH balance ^Budget',
 	},
 	{
 		description: 'Income over time',
 		type: CMD_TYPES.GRAPH,
-		command:
-			'ledger -f $LEDGER_FILE_PATH balance ^Income --invert --balance-format "%T"',
-		output: '',
+		exec: 'ledger -f $LEDGER_FILE_PATH balance ^Income --invert --balance-format "%T"',
 	},
 ];
 
@@ -127,36 +120,26 @@ async function main(
 	// Truncate README content
 	await fs.promises.truncate(props.outputPath);
 
-	// Write head markdown to README
-	await fs.promises.appendFile(
-		props.outputPath,
-		[`# ${props.title}\n`, headMarkdown].join('')
-	);
-
-	const allowedCommands = commands.reduce((acc, curr) => {
-		if (props[curr.type]) {
-			acc.push(curr);
-		}
-
-		return acc;
-	}, []);
-
 	const options = props.strict ? '--strict' : '';
 
-	// Write each evaluated command output
-	for (const { description, type, command } of allowedCommands) {
-		const evaluatedCommand = await evaluateCommand(
-			type,
-			description,
-			command.replace('$LEDGER_FILE_PATH', props.inputPath),
-			options
-		);
+	const header = [`# ${props.title}\n`, headMarkdown].join('');
 
-		await fs.promises.appendFile(props.outputPath, evaluatedCommand);
-	}
+	const evaluatedCommands = await Promise.all(
+		commands
+			.filter((command) => !!props[command.type])
+			.map(({ type, description, exec }) =>
+				evaluateCommand(
+					type,
+					description,
+					exec.replace('$LEDGER_FILE_PATH', props.inputPath),
+					options
+				)
+			)
+	).then((commands) => commands.join(''));
 
-	// Write FAQ markdown to README
-	await fs.promises.appendFile(props.outputPath, faqMarkdown);
+	const markdown = [header, evaluatedCommands, faqMarkdown].join('');
+
+	await fs.promises.appendFile(props.outputPath, markdown);
 }
 
 module.exports = {
