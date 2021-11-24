@@ -49,12 +49,21 @@ This README file is being updated periodically to include the current balance an
 
 #### Income over time
 
-`$ ledger -f ./drewr3.dat balance ^Income --invert --balance-format "%(to_int(T)) "`
+`$ ledger -f ./drewr3.dat balance ^Income --invert --flat --no-total --balance-format "%(to_int(T)) "`
 
 ```
-█▇▁█
+█▁
 
-2030 2000 30 2030 ```
+2000 30 ```
+
+#### Income over time
+
+`$ ledger -f ./drewr3.dat balance ^Expenses --flat --no-total --balance-format "%(to_int(T)) "`
+
+```
+█▁▁▁▁
+
+5500 20 300 334 500 ```
 
 ### FAQ
 
