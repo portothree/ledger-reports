@@ -1,33 +1,6 @@
-# Ledger live README
+# Live ledger README
 
 This README file is being updated periodically to include the current balance and other ledger outputs.
-
-### Git messages standard
-
--   `fin:` for finance related updates (outflow/inflow entries)
--   `docs:` README updates
-
-### Transactions
-
-Here's what a single transactions might look like:
-
-```
-2021-11-10	*	Uber
-	Expenses:Transportation		EUR 3.96
-	[Budget:Transportation]		EUR -3.96
-	Assets:N26		EUR -3.96
-	[Budget]		EUR -3.96
-```
-
-Each line explained:
-
--   The transaction happened at `2021-11-10`, it's cleared (`*`) and the payee was `Uber`.
--   Add `3.96` EUR to transportation expenses
--   Remove `3.96` EUR from transportation budget
--   Remove `3.96` EUR from `N26` bank account
--   Remove `3.96` EUR from `Budget` account
-
-** Transactions with `[]` or `()` are [virtual postings](https://www.ledger-cli.org/3.0/doc/ledger3.html#Virtual-postings)
 
 #### Current net worth
 
@@ -60,6 +33,13 @@ Each line explained:
          $ -3,804.00
 ```
 
+#### Current month expenses
+
+`$ ledger -f ./drewr3.dat balance -b 2021-11-01 -e 2021-11-30 ^Expenses`
+
+```
+```
+
 #### Current budget balance
 
 `$ ledger -f ./drewr3.dat balance ^Budget`
@@ -67,10 +47,43 @@ Each line explained:
 ```
 ```
 
-#### Current month expenses
+#### Income over time
 
-`$ ledger -f ./drewr3.dat -b 2021-11-01 -e 2021-11-30 balance ^Expenses`
+`$ ledger -f ./drewr3.dat balance ^Income --invert --flat --no-total --balance-format "%(to_int(T)) "`
 
 ```
+█▁
+
+2000 30 ```
+
+#### Income over time
+
+`$ ledger -f ./drewr3.dat balance ^Expenses --flat --no-total --balance-format "%(to_int(T)) "`
+
 ```
+█▁▁▁▁
+
+5500 20 300 334 500 ```
+
+### FAQ
+
+How a single transactions should look like?
+
+```
+2021-11-10	*	Uber
+	Expenses:Transportation		EUR 3.96
+	[Budget:Transportation]		EUR -3.96
+	Assets:N26		EUR -3.96
+	[Budget]		EUR -3.96
+```
+
+Each line explained:
+
+-   The transaction happened at `2021-11-10`, it's cleared (`*`) and the payee was `Uber`.
+-   Add `3.96` EUR to transportation expenses
+-   Remove `3.96` EUR from transportation budget
+-   Remove `3.96` EUR from `N26` bank account
+-   Remove `3.96` EUR from `Budget` account
+
+** Transactions with `[]` or `()` are [virtual postings](https://www.ledger-cli.org/3.0/doc/ledger3.html#Virtual-postings)
 
