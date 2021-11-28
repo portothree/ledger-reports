@@ -5,6 +5,7 @@ const childProcess = require('child_process');
 const dayjs = require('dayjs');
 
 const CMD_TYPES = {
+	NET_WORTH: 'netWorth',
 	BALANCE: 'balance',
 	BUDGET: 'budget',
 	GRAPH: 'graph',
@@ -43,17 +44,17 @@ const faqMarkdown = [
 const commands = [
 	{
 		description: 'Current net worth',
-		type: CMD_TYPES.BUDGET,
+		type: CMD_TYPES.NET_WORTH,
 		exec: 'ledger -f $LEDGER_FILE_PATH balance ^Assets ^Equity ^Liabilities',
 	},
 	{
 		description: 'Current balance',
-		type: CMD_TYPES.BUDGET,
+		type: CMD_TYPES.BALANCE,
 		exec: 'ledger -R -f $LEDGER_FILE_PATH balance ^Assets',
 	},
 	{
 		description: 'Current month expenses',
-		type: CMD_TYPES.BUDGET,
+		type: CMD_TYPES.BALANCE,
 		exec: `ledger -f $LEDGER_FILE_PATH balance -b ${dayjs()
 			.startOf('month')
 			.format('YYYY-MM-DD')} -e ${dayjs()
@@ -123,6 +124,7 @@ async function main(
 		title: 'Live ledger README',
 		inputPath: './drewr3.dat',
 		outputPath: './README.md',
+		netWorth: true,
 		balance: true,
 		budget: true,
 		graph: true,
