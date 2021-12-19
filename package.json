@@ -1,6 +1,6 @@
 {
 	"name": "ledger-live-readme",
-	"version": "2.0.1",
+	"version": "2.0.2",
 	"description": "Live Markdown/Readme file with useful ledger outputs",
 	"main": "index.js",
 	"files": [
