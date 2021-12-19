@@ -129,6 +129,7 @@ async function main(
 		budget: true,
 		graph: true,
 		strict: false,
+		market: false,
 	}
 ) {
 	if (!props.inputPath) {
@@ -142,7 +143,17 @@ async function main(
 	// Truncate README content
 	await fs.promises.truncate(props.outputPath);
 
-	const options = props.strict ? '--strict' : '';
+	const options = Object.entries({
+		'--strict': props.strict,
+		'--market': props.market,
+	})
+		.filter(([key, value]) => !!value)
+		.map(([key, value]) => key)
+		.reduce((acc, curr) => {
+			acc += ` ${curr}`;
+
+			return acc;
+		}, '');
 
 	const header = [`# ${props.title}\n`, headMarkdown].join('');
 
