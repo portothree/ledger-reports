@@ -62,6 +62,15 @@ const commands = [
 			.format('YYYY-MM-DD')} ^Expenses`,
 	},
 	{
+		description: 'Current year expenses',
+		type: CMD_TYPES.BALANCE,
+		exec: `ledger -f $LEDGER_FILE_PATH balance -b ${dayjs()
+			.startOf('year')
+			.format('YYYY-MM-DD')} -e ${dayjs()
+			.endOf('year')
+			.format('YYYY-MM-DD')} ^Expenses`,
+	},
+	{
 		description: 'Current budget balance',
 		type: CMD_TYPES.BUDGET,
 		exec: 'ledger -f $LEDGER_FILE_PATH balance ^Budget',
