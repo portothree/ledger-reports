@@ -9,7 +9,7 @@ const CMD_TYPES = {
 	BALANCE: 'balance',
 	BUDGET: 'budget',
 	GRAPH: 'graph',
-	FIRE: 'fire'
+	FIRE: 'fire',
 };
 
 const headMarkdown = [
@@ -89,7 +89,7 @@ const commands = [
 	{
 		description: 'FIRE - Safe withdrawal rate',
 		type: CMD_TYPES.FIRE,
-		exec: 'ledger -f $LEDGER_FILE_PATH balance ^Assets ^Equity ^Liabilities --flat --no-total --balance-format "%(to_int(T)) "'
+		exec: 'ledger -f $LEDGER_FILE_PATH balance ^Assets ^Equity ^Liabilities --flat --no-total --balance-format "%(to_int(T)) "',
 	},
 ];
 
@@ -148,7 +148,7 @@ async function main(
 		baseCurrency: 'EUR',
 		fire: {
 			withdrawalRate: 4,
-		}
+		},
 	}
 ) {
 	if (!props.inputPath) {
@@ -165,6 +165,7 @@ async function main(
 	const options = Object.entries({
 		'--strict': props.strict,
 		'--market': props.market,
+		[`-X ${props.baseCurrency}`]: props.baseCurrency,
 	})
 		.filter(([key, value]) => !!value)
 		.map(([key, value]) => key)
