@@ -9,6 +9,7 @@ const CMD_TYPES = {
 	BALANCE: 'balance',
 	BUDGET: 'budget',
 	GRAPH: 'graph',
+	FIRE: 'fire'
 };
 
 const headMarkdown = [
@@ -85,6 +86,11 @@ const commands = [
 		type: CMD_TYPES.GRAPH,
 		exec: 'ledger -f $LEDGER_FILE_PATH balance ^Expenses --flat --no-total --balance-format "%(to_int(T)) "',
 	},
+	{
+		description: 'FIRE - Safe withdrawal rate',
+		type: CMD_TYPES.FIRE,
+		exec: 'ledger -f $LEDGER_FILE_PATH balance ^Assets ^Equity ^Liabilities --flat --no-total --balance-format "%(to_int(T)) "'
+	},
 ];
 
 async function evaluateCommand(
@@ -139,6 +145,10 @@ async function main(
 		graph: true,
 		strict: false,
 		market: false,
+		baseCurrency: 'EUR',
+		fire: {
+			withdrawalRate: 4,
+		}
 	}
 ) {
 	if (!props.inputPath) {
